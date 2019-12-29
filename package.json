@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "start:dev": "nodemon",
-    "start:prod": "rm -rf ./build && yarn tsc && NODE_ENV=production node ./build/index.js"
+    "docker:dev": "docker-compose up",
+    "build:prod": "rm -rf ./build && yarn tsc",
+    "start:prod": "yarn build:prod && NODE_ENV=production node ./build/index.js"
   },
   "dependencies": {
     "fastify": "2.11.0"

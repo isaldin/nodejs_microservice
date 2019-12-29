@@ -6,7 +6,7 @@ interface IPluginOptionsType {
 
 const jwtRoute: PluginType<IPluginOptionsType> = async (fastify, options) => {
   fastify.get('/jwt', async (req, reply) => {
-    return { jwt: 'asdfasf' };
+    return { jwt: 'xxx.yyy.zzz' };
   });
 };
 

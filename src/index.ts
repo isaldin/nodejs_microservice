@@ -11,11 +11,11 @@ server.register(jwtRoute, {
   var: 'val'
 });
 
-const port = 3000;
+const port = parseInt(process.env.PORT || '3000', 10);
 const start = async () => {
   try {
-    await server.listen(port);
-    server.log.info(`server listening on ${port}`);
+    await server.listen(port, '0.0.0.0');
+    server.log.info(`Server listening on ${port}`);
   } catch (err) {
     server.log.error(err);
     process.exit(1);
