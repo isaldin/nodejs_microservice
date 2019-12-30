@@ -11,6 +11,7 @@ Codestyle provided by TSLint and Prettier tools.
 #### dev-mode
 
 run `yarn docker:dev` then open http://localhost:3000
+
 _(you can change port in package.json scripts)_
 
 #### dev-mode with debug
