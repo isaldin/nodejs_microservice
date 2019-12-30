@@ -1,5 +1,5 @@
-import { Server, IncomingMessage, ServerResponse } from 'http';
-import { FastifyInstance, RegisterOptions, Plugin } from 'fastify';
+import { FastifyInstance, Plugin, RegisterOptions } from 'fastify';
+import { IncomingMessage, Server, ServerResponse } from 'http';
 
 type HttpServer = Server;
 type HttpRequest = IncomingMessage;
