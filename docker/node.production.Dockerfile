@@ -20,6 +20,7 @@ RUN yarn build:prod
 FROM base as production
 
 ENV NODE_ENV=production
+ENV MONGO_URL="<mongo db connection string>"
 ENV PORT=3333
 EXPOSE 3333
 
