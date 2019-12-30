@@ -1,3 +1,5 @@
+# https://medium.com/faun/managing-mongodb-on-docker-with-docker-compose-26bf8a0bbae3
+
 version: '2.4'
 
 services:
@@ -5,9 +7,24 @@ services:
     build:
       dockerfile: ./docker/node.development.Dockerfile
       context: ../
+    environment:
+      - MONGO_URL=mongodb://rootuser:supersecurepassword@mongo:27017/usersdb
     volumes:
       - ../:/usr/src/app/
       - ../node_modules:/usr/src/app/node_modules
     ports:
       - ${PORT}:3333
-    command: yarn start:dev
+    command: bash -c './wait_for_it.sh mongodb:27017 -- yarn start:dev'
+
+  mongo:
+    image: mongo:4.2.2
+    container_name: 'mongodb'
+    environment:
+      - MONGO_INITDB_DATABASE=usersdb
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=supersecurepassword
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ../mongo-volume:/data/db
+    ports:
+      - 27017:27017
