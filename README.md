@@ -1,6 +1,10 @@
 ## First look at microservices development in "right-way"
 
-Node app and DB instance run in docker containers.
+Node app and DB instance run in separated docker containers.
+
+Used Typescript and I try to keep code strongly typed.
+
+Codestyle provided by TSLint and Prettier tools.
 
 ---
 
