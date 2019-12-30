@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start:dev": "nodemon",
-    "docker:dev": "docker-compose up",
+    "docker:dev": "PORT=3000 docker-compose -f ./docker/docker-compose.yaml up",
     "build:prod": "rm -rf ./build && yarn tsc",
     "start:prod": "yarn build:prod && NODE_ENV=production node ./build/index.js"
   },

@@ -1,0 +1,13 @@
+version: '2.4'
+
+services:
+  node-app:
+    build:
+      dockerfile: ./docker/node.development.Dockerfile
+      context: ../
+    volumes:
+      - ../:/usr/src/app/
+      - ../node_modules:/usr/src/app/node_modules
+    ports:
+      - ${PORT}:3333
+    command: yarn start:dev
