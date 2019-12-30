@@ -11,8 +11,12 @@ const jwtRoute: PluginType<IPluginOptions> = async (fastify, options) => {
   });
 
   fastify.post('/user', async (req, reply) => {
-    const user = await new UserModel(req.body).save();
-    return user.toObject();
+    try {
+      const user = await new UserModel(req.body).save();
+      return user.toObject();
+    } catch (err) {
+      fastify.log.error(err);
+    }
   });
 };
 

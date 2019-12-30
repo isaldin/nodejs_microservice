@@ -5,7 +5,12 @@
   "license": "MIT",
   "scripts": {
     "start:dev": "nodemon",
-    "docker:dev": "PORT=3000 docker-compose -f ./docker/docker-compose.yaml up",
+    "start:debug": "nodemon --config nodemon-debug.json",
+    "docker": "docker-compose -f ./docker/docker-compose.yaml up",
+    "docker:dev": "PORT=3000 SCRIPT=dev yarn docker",
+    "docker:debug": "PORT=3000 SCRIPT=debug yarn docker",
+    "docker:rebuild": "PORT=3000 SCRIPT=debug docker-compose -f ./docker/docker-compose.yaml build",
+    "docker:rm": "PORT=3000 SCRIPT=debug docker-compose -f ./docker/docker-compose.yaml rm",
     "build:prod": "rm -rf ./build && yarn tsc",
     "start:prod": "yarn build:prod && NODE_ENV=production node ./build/index.js"
   },

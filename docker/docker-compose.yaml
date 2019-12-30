@@ -12,9 +12,11 @@ services:
     volumes:
       - ../:/usr/src/app/
       - ../node_modules:/usr/src/app/node_modules
+      - ../dist:/usr/src/app/dist
     ports:
       - ${PORT}:3333
-    command: bash -c './wait_for_it.sh mongodb:27017 -- yarn start:dev'
+      - 9119:9229
+    command: bash -c "./wait_for_it.sh mongodb:27017 -- yarn start:${SCRIPT}"
 
   mongo:
     image: mongo:4.2.2
