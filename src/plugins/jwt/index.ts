@@ -1,10 +1,10 @@
 import { PluginType } from '../../types';
 
-interface IPluginOptionsType {
+interface IPluginOptions {
   var: string;
 }
 
-const jwtRoute: PluginType<IPluginOptionsType> = async (fastify, options) => {
+const jwtRoute: PluginType<IPluginOptions> = async (fastify, options) => {
   fastify.get('/jwt', async (req, reply) => {
     return { jwt: 'xxx.yyy.zzz' };
   });
