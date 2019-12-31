@@ -2,6 +2,7 @@ build
 node_modules
 npm-debug.log
 docker
+!docker/wait_for_it.sh
 Dockerfile*
 docker-compose*
 .dockerignore

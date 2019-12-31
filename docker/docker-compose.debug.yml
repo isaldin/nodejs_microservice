@@ -1,8 +1,10 @@
 version: '2.4'
 
 services:
-  node-app:
-    command: bash -c "docker/wait_for_it.sh mongodb:27017 -- yarn start:debug"
+  node-app-dev:
+    command: bash -c "docker/wait_for_it.sh mongodb-dev:27017 -- yarn start:debug"
+    environment:
+      - MONGO_URL=mongodb://rootuser:supersecurepassword@mongodb-dev:27017/usersdb
     volumes:
       - ../dist:/usr/src/app/dist
     ports:

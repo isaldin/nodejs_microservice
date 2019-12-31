@@ -3,7 +3,7 @@
 
 # docker run -d -p <PORT>:3333 <image-id>
 
-FROM node:12.14.0-alpine as base
+FROM node:12.14.0-slim as base
 
 WORKDIR /usr/src/app
 
@@ -26,6 +26,6 @@ EXPOSE 3333
 
 COPY --from=prod-build /usr/src/app/build/. ./
 
-RUN yarn --production
+RUN yarn install --production=true
 
 CMD ["node", "index.js"]

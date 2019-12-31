@@ -5,14 +5,19 @@ import mongoose from 'mongoose';
 import usersRoute from './plugins/users';
 import { FastifyInstanceType } from './types';
 
-const server: FastifyInstanceType = fastify({
-  logger: true
-});
+const buildServer = async (): Promise<FastifyInstanceType> => {
+  const server: FastifyInstanceType = fastify({
+    logger: true
+  });
 
-server.register(usersRoute);
+  server.register(usersRoute);
 
-const port = parseInt(process.env.PORT || '3000', 10);
+  return server;
+};
+
 const start = async () => {
+  const port = parseInt(process.env.PORT || '3000', 10);
+  const server = await buildServer();
   try {
     await server.listen(port, '0.0.0.0');
 
@@ -30,5 +35,11 @@ const start = async () => {
     server.log.error(err);
     process.exit(1);
   }
+  return server;
 };
-start();
+
+if (!module.parent) {
+  start();
+}
+
+export default buildServer;

@@ -1,15 +1,25 @@
 version: '2.4'
 
 services:
-  node-app:
+  node-app-dev:
     extends:
       file: common.yml
       service: node-app
-    command: bash -c "docker/wait_for_it.sh mongodb:27017 -- yarn start:dev"
+    environment:
+      - MONGO_URL=mongodb://rootuser:supersecurepassword@mongodb-dev:27017/usersdb
+    command: bash -c "docker/wait_for_it.sh mongodb-dev:27017 -- yarn start:dev"
+    networks:
+      - dev
 
-  mongo:
+  mongo-dev:
     extends:
       file: common.yml
       service: mongo
     volumes:
       - ../mongo-volume:/data/db
+    container_name: mongodb-dev
+    networks:
+      - dev
+
+networks:
+  dev: {}

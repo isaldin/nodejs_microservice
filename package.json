@@ -7,22 +7,47 @@
     "start:dev": "nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
     "docker:dev": "docker-compose -f docker/docker-compose.development.yml up",
+    "docker:test": "docker-compose -f docker/docker-compose.test.yml up -d && docker/wait_for_it.sh localhost:27017 -- yarn test",
     "docker:debug": "docker-compose -f docker/docker-compose.development.yml -f docker/docker-compose.debug.yml up",
     "build:prod": "rm -rf ./build && yarn tsc",
-    "start:prod": "yarn build:prod && NODE_ENV=production node ./build/index.js"
+    "start:prod": "yarn build:prod && NODE_ENV=production node ./build/index.js",
+    "test": "MONGO_URL=mongodb://rootuser:supersecurepassword@localhost:27017/usersdb jest --watch && docker-compose -f docker/docker-compose.test.yml down"
   },
   "dependencies": {
     "fastify": "2.11.0",
-    "mongoose": "5.8.3"
+    "mongoose": "5.8.3",
+    "ramda": "0.26.1"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.25",
     "@types/mongoose": "5.5.36",
     "@types/node": "13.1.1",
+    "@types/ramda": "0.26.39",
+    "@types/supertest": "^2.0.8",
+    "jest": "24.9.0",
     "nodemon": "2.0.2",
+    "supertest": "4.0.2",
+    "ts-jest": "24.2.0",
     "ts-node": "8.5.4",
     "tslint": "5.20.1",
     "tslint-config-prettier": "1.18.0",
     "typescript": "3.7.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/build/",
+      "/dist/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/build/",
+      "/dist/"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    }
   },
   "prettier": {
     "singleQuote": true
