@@ -1,6 +1,7 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import { MongoError } from 'mongodb';
 import { Error as MongooseError } from 'mongoose';
+import { assoc, last, propOr, reduce, toPairs } from 'ramda';
 
 interface IAppError {
   code: number;
@@ -41,9 +42,15 @@ const convertMongoError = (mongoError: MongoError): IAppError => {
 
 const convertMongooseError = (error: MongooseError): IAppError => {
   if (error instanceof MongooseError.ValidationError) {
+    const errors = reduce(
+      (acc, item) => assoc(item[0], propOr('', 'kind', last(item)), acc),
+      {},
+      toPairs(error.errors)
+    );
+
     const validationError: IValidationError = {
       code: 422,
-      errors: error.errors,
+      errors,
       message: 'Validation error'
     };
     return validationError;
