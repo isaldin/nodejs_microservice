@@ -5,7 +5,7 @@ ENV NODE_ENV=development
 WORKDIR /usr/src/app
 
 COPY package.json .
-COPY wait_for_it.sh .
+COPY docker/wait_for_it.sh .
 
 RUN yarn install
 

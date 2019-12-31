@@ -16,7 +16,7 @@ services:
     ports:
       - ${PORT}:3333
       - 9119:9229
-    command: bash -c "./wait_for_it.sh mongodb:27017 -- yarn start:${SCRIPT}"
+    command: bash -c "docker/wait_for_it.sh mongodb:27017 -- yarn start:${SCRIPT}"
 
   mongo:
     image: mongo:4.2.2
