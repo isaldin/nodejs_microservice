@@ -1,4 +1,3 @@
-import { UserModel } from '../../models';
 import { PluginType } from '../../types';
 
 interface IPluginOptions {
@@ -8,15 +7,6 @@ interface IPluginOptions {
 const jwtRoute: PluginType<IPluginOptions> = async (fastify, options) => {
   fastify.get('/jwt', async (req, reply) => {
     return { jwt: 'xxx.yyy.zzz' };
-  });
-
-  fastify.post('/user', async (req, reply) => {
-    try {
-      const user = await new UserModel(req.body).save();
-      return user.toObject();
-    } catch (err) {
-      fastify.log.error(err);
-    }
   });
 };
 

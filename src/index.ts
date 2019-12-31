@@ -1,16 +1,15 @@
 import fastify from 'fastify';
 import mongoose from 'mongoose';
 
-import jwtRoute from './plugins/jwt';
+// import jwtRoute from './plugins/jwt';
+import usersRoute from './plugins/users';
 import { FastifyInstanceType } from './types';
 
 const server: FastifyInstanceType = fastify({
   logger: true
 });
 
-server.register(jwtRoute, {
-  var: 'val'
-});
+server.register(usersRoute);
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const start = async () => {
