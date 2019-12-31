@@ -31,3 +31,9 @@ _(don't forget to set MONGO_URL in `docker/node.production.Dockerfile`)_
 then run `docker run -d -p <PORT>:3333 <image-id>`
 _(\<PORT\> -- port that you prefer
 \<image-id\> -- image id that you have got on prev step)_
+
+---
+
+#### test
+
+`docker:test` runs dedicated docker-container with mongo and jest in watch mode on host machine.
