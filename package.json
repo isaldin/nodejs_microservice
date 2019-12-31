@@ -6,11 +6,8 @@
   "scripts": {
     "start:dev": "nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
-    "docker": "docker-compose -f ./docker/docker-compose.yaml up",
-    "docker:dev": "PORT=3000 SCRIPT=dev yarn docker",
-    "docker:debug": "PORT=3000 SCRIPT=debug yarn docker",
-    "docker:rebuild": "PORT=3000 SCRIPT=debug docker-compose -f ./docker/docker-compose.yaml build",
-    "docker:rm": "PORT=3000 SCRIPT=debug docker-compose -f ./docker/docker-compose.yaml rm",
+    "docker:dev": "docker-compose -f docker/docker-compose.development.yml up",
+    "docker:debug": "docker-compose -f docker/docker-compose.development.yml -f docker/docker-compose.debug.yml up",
     "build:prod": "rm -rf ./build && yarn tsc",
     "start:prod": "yarn build:prod && NODE_ENV=production node ./build/index.js"
   },

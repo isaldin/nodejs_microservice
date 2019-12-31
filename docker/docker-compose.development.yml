@@ -1,0 +1,17 @@
+# https://medium.com/faun/managing-mongodb-on-docker-with-docker-compose-26bf8a0bbae3
+
+version: '2.4'
+
+services:
+  node-app:
+    extends:
+      file: common.yml
+      service: node-app
+    command: bash -c "docker/wait_for_it.sh mongodb:27017 -- yarn start:dev"
+
+  mongo:
+    extends:
+      file: common.yml
+      service: mongo
+    volumes:
+      - ../mongo-volume:/data/db

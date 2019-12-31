@@ -1,0 +1,11 @@
+# https://medium.com/faun/managing-mongodb-on-docker-with-docker-compose-26bf8a0bbae3
+
+version: '2.4'
+
+services:
+  node-app:
+    command: bash -c "docker/wait_for_it.sh mongodb:27017 -- yarn start:debug"
+    volumes:
+      - ../dist:/usr/src/app/dist
+    ports:
+      - 9119:9229
