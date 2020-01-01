@@ -3,17 +3,7 @@ import { MongoError } from 'mongodb';
 import { Error as MongooseError } from 'mongoose';
 import { assoc, last, propOr, reduce, toPairs } from 'ramda';
 
-interface IAppError {
-  code: number;
-  message: string;
-  payload?: object;
-}
-
-interface IValidationError extends IAppError {
-  errors: {
-    [path: string]: MongooseError.ValidatorError | MongooseError.CastError;
-  };
-}
+import { IAppError, IValidationError } from './types';
 
 const unknownError = (payload?: object): IAppError => ({
   code: 500,
@@ -71,6 +61,8 @@ const convertError = (errorObject: Error | any): IAppError => {
     return convertMongoError(errorObject);
   } else if (errorObject instanceof MongooseError) {
     return convertMongooseError(errorObject);
+  } else if (errorObject as IAppError) {
+    return errorObject;
   } else {
     return unknownError(errorObject);
   }

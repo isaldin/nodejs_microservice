@@ -34,40 +34,55 @@ describe('/users route', () => {
       await UserModel.deleteMany({});
     });
 
-    it('should return new user in response when user non exists', async () => {
+    it('should return 201 when user non exists', async () => {
       const resp = await supertest(fastify.server)
         .post('/user')
-        .send({ login: 'ilya', hash: 'asdf' })
-        .expect(200);
-      expect(resp.body.login).toEqual('ilya');
-      expect(resp.body.hash).toEqual('asdf');
+        .send({ login: 'ilya', password: '1', confirm_password: '1' })
+        .expect(201);
     });
 
     it('should return 422 when user exists', async () => {
-      await UserModel.create({ login: 'ilya', hash: 'asdf' });
+      await UserModel.create({
+        login: 'ilya',
+        password: '1',
+        confirm_password: '1'
+      });
       const resp = await supertest(fastify.server)
         .post('/user')
-        .send({ login: 'ilya', hash: 'asdf' })
+        .send({ login: 'ilya', password: '1', confirm_password: '1' })
         .expect(422);
       expect(resp.body.message).toEqual('Duplicate entity');
     });
 
-    it('should return 422 and validation error when empty login provided', async () => {
-      const resp = await supertest(fastify.server)
-        .post('/user')
-        .send({ login: '', hash: 'asdf' })
-        .expect(422);
-      expect(resp.body.message).toEqual('Validation error');
-      expect(resp.body.errors).toEqual({ login: 'required' });
-    });
+    describe('should return 422 and validation error', () => {
+      it('when empty login provided', async () => {
+        const resp = await supertest(fastify.server)
+          .post('/user')
+          .send({ login: '', password: '1', confirm_password: '1' })
+          .expect(422);
+        expect(resp.body.message).toEqual('Validation error');
+        expect(resp.body.errors).toEqual({ login: 'required' });
+      });
 
-    it('should return 422 and validation error when empty hash provided', async () => {
-      const resp = await supertest(fastify.server)
-        .post('/user')
-        .send({ login: 'ilya', hash: '' })
-        .expect(422);
-      expect(resp.body.message).toEqual('Validation error');
-      expect(resp.body.errors).toEqual({ hash: 'required' });
+      it('when passwords are empty', async () => {
+        const resp = await supertest(fastify.server)
+          .post('/user')
+          .send({ login: 'ilya', password: '', confirm_password: '' })
+          .expect(422);
+        expect(resp.body.message).toEqual('Validation error');
+        expect(resp.body.errors).toEqual({ password: 'required' });
+      });
+
+      it('when passwords are not matched', async () => {
+        const resp = await supertest(fastify.server)
+          .post('/user')
+          .send({ login: 'ilya', password: '1', confirm_password: '2' })
+          .expect(422);
+        expect(resp.body.message).toEqual('Validation error');
+        expect(resp.body.errors).toEqual({
+          password: 'not matched to confirm_password'
+        });
+      });
     });
   });
 });
