@@ -26,11 +26,11 @@ In both cases you have hot server restart when changes in `src` folder occur.
 #### Production docker image (only node app, assume that you have mongoDb instance anywhere)
 
 `docker build --rm -f ./docker/node.production.Dockerfile . -t ib17/auth:latest`
-_(don't forget to set MONGO_URL in `docker/node.production.Dockerfile`)_
 
-then run `docker run -d -p <PORT>:3333 <image-id>`
+then run `docker run -d -p <PORT>:3333 --env MONGO_URL='<MONGO_CONNECTION_STRING>' <image-id>`
 _(\<PORT\> -- port that you prefer
-\<image-id\> -- image id that you have got on prev step)_
+\<image-id\> -- image id that you have got on prev step
+MONGO_CONNECTION_STRING -- connection string to your mongoDB instance)_
 
 ---
 
