@@ -34,11 +34,24 @@ describe('/users route', () => {
       await UserModel.deleteMany({});
     });
 
-    it('should return 201 when user non exists', async () => {
-      const resp = await supertest(fastify.server)
-        .post('/user')
-        .send({ login: 'ilya', password: '1', confirm_password: '1' })
-        .expect(201);
+    describe('when user non exists', () => {
+      it('should return 201 ', async () => {
+        const resp = await supertest(fastify.server)
+          .post('/user')
+          .send({ login: 'ilya', password: '1', confirm_password: '1' })
+          .expect(201);
+      });
+
+      it('password stores not in plain text', async () => {
+        const resp = await supertest(fastify.server)
+          .post('/user')
+          .send({ login: 'ilya', password: 'asdf', confirm_password: 'asdf' });
+        const user = await UserModel.findOne({ login: 'ilya' });
+        const userPassword = user?.password;
+        expect(userPassword).not.toEqual('');
+        expect(userPassword).not.toBeUndefined();
+        expect(userPassword).not.toEqual('asdf');
+      });
     });
 
     it('should return 422 when user exists', async () => {
