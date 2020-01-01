@@ -7,7 +7,7 @@ services:
       service: node-app
     environment:
       - MONGO_URL=mongodb://rootuser:supersecurepassword@mongodb-dev:27017/usersdb
-    command: bash -c "docker/wait_for_it.sh mongodb-dev:27017 -- yarn start:dev"
+    command: bash -c "docker/wait_for_it.sh mongodb-dev:27017 -- npm rebuild --update-binary  && yarn start:dev"
     networks:
       - dev
 
