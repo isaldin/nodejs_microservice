@@ -11,7 +11,7 @@ services:
       - ../:/usr/src/app/
       - ../node_modules:/usr/src/app/node_modules
     ports:
-      - ${PORT:-3000}:3333
+      - ${PORT:-3333}:3333
 
   mongo:
     image: mongo:4.2.2

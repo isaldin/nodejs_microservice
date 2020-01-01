@@ -6,8 +6,3 @@ services:
       file: common.yml
       service: mongo
     container_name: mongodb-test
-    networks:
-      - test
-
-networks:
-  test: {}

@@ -7,6 +7,7 @@ interface IUser extends Document {
   login: string;
   password: string;
   confirm_password: string;
+  comparePassword: (password: string) => boolean;
 }
 
 const UserSchema = new Schema({
@@ -30,9 +31,13 @@ UserSchema.pre('save', async function(this: IUser, next) {
   } catch (error) {
     return next(error);
   }
-
-  return next();
 });
+
+UserSchema.methods.comparePassword = async function(
+  password: string
+): Promise<boolean> {
+  return bcrypt.compare(password, this.password);
+};
 
 const UserModel = mongoose.model<IUser>('User', UserSchema);
 

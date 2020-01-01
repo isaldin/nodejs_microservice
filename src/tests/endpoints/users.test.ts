@@ -35,22 +35,23 @@ describe('/users route', () => {
     });
 
     describe('when user non exists', () => {
-      it('should return 201 ', async () => {
+      it('should return 201 and create user in db', async () => {
         const resp = await supertest(fastify.server)
           .post('/user')
-          .send({ login: 'ilya', password: '1', confirm_password: '1' })
-          .expect(201);
+          .send({ login: 'ilya', password: '1', confirm_password: '1' });
+
+        expect(resp.status).toEqual(201);
+        const user = await UserModel.findOne({ login: 'ilya' });
+        expect(user?.login).toEqual('ilya');
       });
 
-      it('password stores not in plain text', async () => {
+      it("shouldn't return password in response", async () => {
         const resp = await supertest(fastify.server)
           .post('/user')
-          .send({ login: 'ilya', password: 'asdf', confirm_password: 'asdf' });
-        const user = await UserModel.findOne({ login: 'ilya' });
-        const userPassword = user?.password;
-        expect(userPassword).not.toEqual('');
-        expect(userPassword).not.toBeUndefined();
-        expect(userPassword).not.toEqual('asdf');
+          .send({ login: 'ilya', password: '1', confirm_password: '1' });
+
+        expect(resp.status).toEqual(201);
+        expect(resp.body).not.toHaveProperty('password');
       });
     });
 

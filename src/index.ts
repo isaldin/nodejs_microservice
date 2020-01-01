@@ -7,7 +7,7 @@ import { FastifyInstanceType } from './types';
 
 const buildServer = async (): Promise<FastifyInstanceType> => {
   const server: FastifyInstanceType = fastify({
-    logger: true
+    logger: process.env.NODE_ENV === 'development'
   });
 
   server.register(usersRoute);
@@ -16,7 +16,7 @@ const buildServer = async (): Promise<FastifyInstanceType> => {
 };
 
 const start = async () => {
-  const port = parseInt(process.env.PORT || '3000', 10);
+  const port = parseInt(process.env.PORT || '3333', 10);
   const server = await buildServer();
   try {
     await server.listen(port, '0.0.0.0');
