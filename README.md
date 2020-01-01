@@ -29,11 +29,9 @@ In both cases you have hot server restart when changes in `src` folder occur.
 
 then run `docker run -d -p <PORT>:3333 --env MONGO_URL='<MONGO_CONNECTION_STRING>' <image-id>`
 
-_(\<PORT\> -- port that you prefer
-
-\<image-id\> -- image id that you have got on prev step
-
-MONGO_CONNECTION_STRING -- connection string to your mongoDB instance)_
+- \<PORT\> -- port that you prefer_
+- <image-id\> -- image id that you have got on prev step
+- MONGO_CONNECTION_STRING -- connection string to your mongoDB instance (don't forget singlequotes)
 
 ---
 
