@@ -37,7 +37,9 @@ then run `docker run -d -p <PORT>:3333 --env MONGO_URL='<MONGO_CONNECTION_STRING
 
 #### test
 
-`docker:test` runs dedicated docker-container with mongo and jest in watch mode on host machine.
+`yarn:test` runs jest in watch-mode on host machine.
+
+You can test endpoints and models separately for each test-file (i.e. you have dedicated instance of server and mongodb for each test-file) [example](https://github.com/isaldin/nodejs_microservice/blob/ee74e027e951785d93e088654dfee3141fa66b26/src/tests/endpoints/login.test.ts)
 
 ---
 
