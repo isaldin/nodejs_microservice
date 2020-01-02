@@ -1,8 +1,0 @@
-version: '2.4'
-
-services:
-  mongodb-test:
-    extends:
-      file: common.yml
-      service: mongo
-    container_name: mongodb-test

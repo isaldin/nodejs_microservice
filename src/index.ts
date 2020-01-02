@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import mongoose from 'mongoose';
 
 // import jwtRoute from './plugins/jwt';
+import loginRoute from './plugins/login.ts';
 import usersRoute from './plugins/users';
 import { FastifyInstanceType } from './types';
 
@@ -11,6 +12,7 @@ const buildServer = async (): Promise<FastifyInstanceType> => {
   });
 
   server.register(usersRoute);
+  server.register(loginRoute);
 
   return server;
 };

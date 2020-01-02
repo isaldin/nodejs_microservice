@@ -7,7 +7,11 @@ interface IUser extends Document {
   login: string;
   password: string;
   confirm_password: string;
-  comparePassword: (password: string) => boolean;
+  comparePassword: (password: string) => Promise<boolean>;
+}
+
+interface IUserModel extends mongoose.Model<IUser> {
+  doLogin: (login: string, password: string) => Promise<boolean>;
 }
 
 const UserSchema = new Schema({
@@ -39,6 +43,22 @@ UserSchema.methods.comparePassword = async function(
   return bcrypt.compare(password, this.password);
 };
 
-const UserModel = mongoose.model<IUser>('User', UserSchema);
+UserSchema.statics.doLogin = async function(
+  this: IUser,
+  login: string,
+  password: string
+): Promise<boolean> {
+  const user = await this.model('User').findOne({ login });
+  if (user as IUser) {
+    const isCorrectPassword = await (user! as IUser).comparePassword(password);
+    return isCorrectPassword;
+  }
+  return Promise.resolve(false);
+};
+
+const UserModel: IUserModel = mongoose.model<IUser, IUserModel>(
+  'User',
+  UserSchema
+);
 
 export default UserModel;

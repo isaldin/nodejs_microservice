@@ -2,7 +2,7 @@ version: '2.4'
 
 services:
   node-app-dev:
-    command: bash -c "docker/wait_for_it.sh mongodb-dev:27017 -- yarn start:debug"
+    command: bash -c "docker/wait_for_it.sh mongodb-dev:27017 -- yarn bcrypt && yarn start:debug"
     environment:
       - MONGO_URL=mongodb://rootuser:supersecurepassword@mongodb-dev:27017/usersdb
     volumes:

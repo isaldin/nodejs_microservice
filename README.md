@@ -45,4 +45,4 @@ then run `docker run -d -p <PORT>:3333 --env MONGO_URL='<MONGO_CONNECTION_STRING
 
 `bcrypt` has os-related binary. because we should rebuild it for docker and local machine if versions not matched.
 
-use `npm rebuild bcrypt --update-binary`
+use `yarn bcrypt` script for doing it if you have this problem when run `yarn test` (docker do it for you in command script)

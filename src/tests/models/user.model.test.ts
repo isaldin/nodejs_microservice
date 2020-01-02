@@ -1,24 +1,30 @@
-import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose, { mongo } from 'mongoose';
 
 import { UserModel } from '../../models';
 
+let mongoServer: MongoMemoryServer;
+
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URL!, {
+  mongoServer = new MongoMemoryServer();
+  const mongoUri = await mongoServer.getUri();
+  await mongoose.connect(mongoUri, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true
   });
-  await UserModel.deleteMany({});
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
+  await mongoose.disconnect();
+  await mongoServer.stop();
 });
 
 describe('UserModel', () => {
   beforeEach(async () => {
     await UserModel.deleteMany({});
   });
+
   it('password stores not in plain text', async () => {
     await new UserModel({ login: 'ilya', password: 'asdf' }).save();
     const user = await UserModel.findOne({ login: 'ilya' });
@@ -28,7 +34,7 @@ describe('UserModel', () => {
     expect(userPassword).not.toEqual('asdf');
   });
 
-  test("password doesn't re-hashed after save non-modified password", async () => {
+  it('should not re-hash password after save non-modified password', async () => {
     await new UserModel({ login: 'ilya', password: 'asdf' }).save();
 
     const user = await UserModel.findOne({ login: 'ilya' });
@@ -39,7 +45,7 @@ describe('UserModel', () => {
     expect(userPassword).toEqual(newUser?.password);
   });
 
-  test('password re-hashed after save model with new password', async () => {
+  it('should re-hash password after save model with new password', async () => {
     await new UserModel({ login: 'ilya', password: 'asdf' }).save();
 
     const user = await UserModel.findOne({ login: 'ilya' });

@@ -1,3 +1,4 @@
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 // tslint:disable-next-line: no-implicit-dependencies
 import supertest from 'supertest';
@@ -7,25 +8,24 @@ import { UserModel } from '../../models';
 import { FastifyInstanceType } from '../../types';
 
 let fastify: FastifyInstanceType;
+let mongoServer: MongoMemoryServer;
 
 beforeAll(async () => {
-  if (!process.env.MONGO_URL) {
-    process.exit(1);
-  }
-  await mongoose.connect(process.env.MONGO_URL, {
+  mongoServer = new MongoMemoryServer();
+  const mongoUri = await mongoServer.getUri();
+  await mongoose.connect(mongoUri, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true
   });
-
   fastify = await buildServer();
   await fastify.ready();
 });
 
-afterAll(async done => {
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
   await fastify.close();
-  await mongoose.connection.close();
-  done();
 });
 
 describe('/users route', () => {
@@ -42,7 +42,7 @@ describe('/users route', () => {
 
         expect(resp.status).toEqual(201);
         const user = await UserModel.findOne({ login: 'ilya' });
-        expect(user?.login).toEqual('ilya');
+        expect(user!.login).toEqual('ilya');
       });
 
       it("shouldn't return password in response", async () => {
