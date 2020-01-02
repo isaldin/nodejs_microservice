@@ -1,8 +1,7 @@
 import { Error as MongooseError } from 'mongoose';
 
-export interface IAppError {
+export interface IAppError extends Error {
   code: number;
-  message: string;
   payload?: object;
 }
 

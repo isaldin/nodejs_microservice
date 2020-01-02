@@ -11,8 +11,13 @@ interface IPluginOptions {
 
 const loginRoute: PluginType<IPluginOptions> = async (fastify, options) => {
   fastify.post('/login', async (req, reply) => {
-    const result = await UserModel.doLogin(req.body.login, req.body.password);
-    reply.code(result ? 200 : 401).send();
+    try {
+      const result = await UserModel.doLogin(req.body.login, req.body.password);
+      reply.code(result ? 200 : 401).send();
+    } catch (error) {
+      const appError = convertError(error);
+      reply.code(appError.code).send(appError);
+    }
   });
 };
 

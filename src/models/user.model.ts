@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
 import mongoose, { Document, Schema } from 'mongoose';
 
+import { IAppError } from '../utils/errors/types';
+
 const SALT_WORK_FACTOR = 10;
 
 interface IUser extends Document {
@@ -49,6 +51,16 @@ UserSchema.statics.doLogin = async function(
   password: string
 ): Promise<boolean> {
   const user = await this.model('User').findOne({ login });
+
+  if (!user) {
+    const userNotFoundError: IAppError = {
+      name: 'UserNotFoundError',
+      code: 404,
+      message: 'User not found in db'
+    };
+    throw userNotFoundError;
+  }
+
   if (user as IUser) {
     const isCorrectPassword = await (user! as IUser).comparePassword(password);
     return isCorrectPassword;

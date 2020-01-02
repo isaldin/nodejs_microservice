@@ -1,3 +1,4 @@
+// tslint:disable-next-line: no-implicit-dependencies
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 // tslint:disable-next-line: no-implicit-dependencies
@@ -53,12 +54,12 @@ describe('/login', () => {
     });
   });
 
-  describe('when user non exist', () => {
-    it('should return 401', async () => {
+  describe('when user non exists', () => {
+    it('should return 404', async () => {
       await supertest(fastify.server)
         .post('/login')
         .send({ login: 'ttt', password: 'zzz' })
-        .expect(401);
+        .expect(404);
     });
   });
 });

@@ -7,6 +7,7 @@ interface IBuildValidationErrorInput {
 const buildValidationError = (
   input: IBuildValidationErrorInput
 ): IValidationError => ({
+  name: 'Validation error',
   code: 422,
   message: 'Validation error',
   errors: {
