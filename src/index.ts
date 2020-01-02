@@ -11,8 +11,8 @@ const buildServer = async (): Promise<FastifyInstanceType> => {
     logger: process.env.NODE_ENV === 'development'
   });
 
-  server.register(usersRoute);
-  server.register(loginRoute);
+  server.register(usersRoute, { prefix: '/user' });
+  server.register(loginRoute, { prefix: '/login' });
 
   return server;
 };

@@ -63,7 +63,16 @@ UserSchema.statics.doLogin = async function(
 
   if (user as IUser) {
     const isCorrectPassword = await (user! as IUser).comparePassword(password);
-    return isCorrectPassword;
+    if (isCorrectPassword) {
+      return true;
+    } else {
+      const passwordIncorrectError: IAppError = {
+        code: 401,
+        name: 'AuthError',
+        message: 'Password is incorrect'
+      };
+      throw passwordIncorrectError;
+    }
   }
   return Promise.resolve(false);
 };
