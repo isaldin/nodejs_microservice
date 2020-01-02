@@ -1,8 +1,7 @@
 import fastify from 'fastify';
 import mongoose from 'mongoose';
 
-// import jwtRoute from './plugins/jwt';
-import loginRoute from './plugins/login.ts';
+import loginRoute from './plugins/login';
 import usersRoute from './plugins/users';
 import { FastifyInstanceType } from './types';
 
