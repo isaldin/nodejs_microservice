@@ -7,7 +7,7 @@ import { FastifyInstanceType } from './types';
 
 const buildServer = async (): Promise<FastifyInstanceType> => {
   const server: FastifyInstanceType = fastify({
-    logger: process.env.NODE_ENV === 'development'
+    logger: true // process.env.NODE_ENV === 'development'
   });
 
   server.register(usersRoute, { prefix: '/user' });
@@ -23,6 +23,7 @@ const start = async () => {
     await server.listen(port, '0.0.0.0');
 
     if (!process.env.MONGO_URL) {
+      process.stderr.write(`process.env.MONGO_URL not defined!`);
       process.exit(1);
     }
     await mongoose.connect(process.env.MONGO_URL, {
@@ -34,6 +35,7 @@ const start = async () => {
     server.log.info(`Server listening on ${port}`);
   } catch (err) {
     server.log.error(err);
+    process.stderr.write(err);
     process.exit(1);
   }
   return server;
