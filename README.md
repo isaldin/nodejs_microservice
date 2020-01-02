@@ -1,5 +1,7 @@
 ## First look at microservices development in "right-way"
 
+(I'm trying to create auth-microservice)
+
 Node app and DB instance run in separated docker containers.
 
 Used Typescript and I try to keep code strongly typed.
