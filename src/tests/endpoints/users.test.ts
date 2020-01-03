@@ -45,7 +45,7 @@ describe('/users route', () => {
 
         const user = await UserModel.findOne({ login: 'ilya' });
         expect(user!.login).toEqual('ilya');
-        expect(resp.body).toEqual(user!.id);
+        expect(resp.body.userId).toEqual(user!.id);
       });
 
       it("shouldn't return password in response", async () => {
