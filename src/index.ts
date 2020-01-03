@@ -1,17 +1,19 @@
 import fastify from 'fastify';
 import mongoose from 'mongoose';
 
+import jwtRoute from './plugins/jwt';
 import loginRoute from './plugins/login';
 import usersRoute from './plugins/users';
 import { FastifyInstanceType } from './types';
 
 const buildServer = async (): Promise<FastifyInstanceType> => {
   const server: FastifyInstanceType = fastify({
-    logger: true // process.env.NODE_ENV === 'development'
+    logger: process.env.NODE_ENV === 'development'
   });
 
   server.register(usersRoute, { prefix: '/user' });
   server.register(loginRoute, { prefix: '/login' });
+  server.register(jwtRoute, { prefix: '/jwt' });
 
   return server;
 };
