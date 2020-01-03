@@ -50,3 +50,35 @@ You can test endpoints and models separately for each test-file (i.e. you have d
 `bcrypt` has os-related binary. because we should rebuild it for docker and local machine if versions not matched.
 
 use `yarn bcrypt` script for doing it if you have this problem when run `yarn test` (docker do it for you in command script)
+
+
+---
+
+```
+gateway                                    this ms
+   +                                         +
+   | post /user                              |
+   | {login, password, confirm_password}     |
+   +---------------------------------------->+
+   |                                         |
+   |                                         | create user
+   |                                         | in DB               +--------------------+
+   |                                         +---------------->    |                    |
+   |                                         |                     |                    |
+   |                                         |                     |                    |
+   |                                         |   generate jwt      |                    |
+   |                                         +-----------------+   |     DB container   |
+   |                                         |                 |   |                    |
+   |                                         + <---------------+   |                    |
+   |                                         |                     |                    |
+   |                                         | sa^e jwt to DB      |                    |
+   |                                         +----------------->   +--------------------+
+   |                                         |
+   |                return jwt in response   |
+   +<----------------------------------------+
+   |                                         |
+   |                                         |
+   +                                         +
+
+   ```
+
