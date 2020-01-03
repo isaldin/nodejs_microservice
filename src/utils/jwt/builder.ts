@@ -16,18 +16,19 @@ export interface IJWTGenerateInput {
   lifeTimeInSeconds: number;
 }
 
+const isInvalidString = anyPass([isEmpty, complement(is(String))]);
+
 export default {
   generateJWT: (input: IJWTGenerateInput): string | null => {
     if (!process.env.JWT_SECRET) {
       throw new Error();
     }
 
-    const isUserIdInvalid = anyPass([isEmpty, complement(is(String))]);
     const isLifeTimeInvalid = anyPass([complement(is(Number)), lt(__, 0)]);
 
     if (
       !input ||
-      isUserIdInvalid(input.userId) ||
+      isInvalidString(input.userId) ||
       isLifeTimeInvalid(input.lifeTimeInSeconds)
     ) {
       return null;
@@ -43,9 +44,7 @@ export default {
   },
 
   isValid: (jwt: string): boolean | null => {
-    const isJwtInvalid = anyPass([isEmpty, complement(is(String))]);
-
-    if (isJwtInvalid(jwt)) {
+    if (isInvalidString(jwt)) {
       return null;
     }
 
