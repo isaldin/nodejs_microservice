@@ -17,6 +17,7 @@ export interface IJWTGenerateInput {
 }
 
 const isInvalidString = anyPass([isEmpty, complement(is(String))]);
+const isNotPositiveNumber = anyPass([complement(is(Number)), lt(__, 0)]);
 
 export default {
   generateJWT: (input: IJWTGenerateInput): string | null => {
@@ -24,12 +25,10 @@ export default {
       throw new Error();
     }
 
-    const isLifeTimeInvalid = anyPass([complement(is(Number)), lt(__, 0)]);
-
     if (
       !input ||
       isInvalidString(input.userId) ||
-      isLifeTimeInvalid(input.lifeTimeInSeconds)
+      isNotPositiveNumber(input.lifeTimeInSeconds)
     ) {
       return null;
     }
