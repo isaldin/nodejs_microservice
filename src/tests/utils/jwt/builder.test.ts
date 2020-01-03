@@ -13,11 +13,6 @@ const testJWTSecret =
 const encode = (input: any | null): string =>
   jwtSimple.encode(input, testJWTSecret);
 
-const validJWT = encode({
-  userId: userData.userId,
-  exp: userData.lifeTimeInSeconds
-});
-
 beforeAll(() => {
   process.env = {
     ...process.env,
@@ -86,13 +81,11 @@ describe('jwt utils object', () => {
     });
 
     it('should generate token', () => {
+      const exp = userData.lifeTimeInSeconds + Date.now() / 1000;
       const token = jwt.generateJWT(userData);
       expect(token).toEqual(
         jwtSimple.encode(
-          {
-            userId: userData.userId,
-            exp: userData.lifeTimeInSeconds + Date.now() / 1000
-          },
+          { userId: userData.userId, exp },
           process.env.JWT_SECRET!
         )
       );

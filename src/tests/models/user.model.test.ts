@@ -1,5 +1,6 @@
+// tslint:disable-next-line: no-implicit-dependencies
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 
 import { UserModel } from '../../models';
 

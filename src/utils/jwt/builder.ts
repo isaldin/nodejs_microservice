@@ -1,5 +1,15 @@
 import jwtSimple from 'jwt-simple';
-import { __, both, gt, is, where } from 'ramda';
+import {
+  __,
+  anyPass,
+  both,
+  complement,
+  gt,
+  is,
+  isEmpty,
+  lt,
+  where
+} from 'ramda';
 
 export interface IJWTGenerateInput {
   userId: string;
@@ -12,13 +22,13 @@ export default {
       throw new Error();
     }
 
-    if (typeof input?.userId !== 'string' || input.userId === '') {
-      return null;
-    }
+    const isUserIdInvalid = anyPass([isEmpty, complement(is(String))]);
+    const isLifeTimeInvalid = anyPass([complement(is(Number)), lt(__, 0)]);
 
     if (
-      typeof input.lifeTimeInSeconds !== 'number' ||
-      input.lifeTimeInSeconds < 1
+      !input ||
+      isUserIdInvalid(input.userId) ||
+      isLifeTimeInvalid(input.lifeTimeInSeconds)
     ) {
       return null;
     }
@@ -33,7 +43,9 @@ export default {
   },
 
   isValid: (jwt: string): boolean | null => {
-    if (typeof jwt !== 'string' || jwt === '') {
+    const isJwtInvalid = anyPass([isEmpty, complement(is(String))]);
+
+    if (isJwtInvalid(jwt)) {
       return null;
     }
 
