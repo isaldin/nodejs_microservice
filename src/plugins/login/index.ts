@@ -7,7 +7,11 @@ const loginRoute: PluginType = async fastify => {
   fastify.post('/', async (req, reply) => {
     try {
       const result = await UserModel.doLogin(req.body.login, req.body.password);
-      reply.code(result ? 200 : 401).send();
+      if (!result) {
+        reply.code(401).send();
+      } else {
+        reply.code(200).send({ userId: result });
+      }
     } catch (error) {
       const appError = convertError(error);
       reply.code(appError.code).send(appError);

@@ -39,11 +39,15 @@ describe('/login', () => {
   });
 
   describe('when user exists', () => {
-    it('should return 200 when correct password', async () => {
-      await supertest(fastify.server)
+    it('should return 200 and userId when login success', async () => {
+      const resp = await supertest(fastify.server)
         .post('/login')
-        .send({ login: 'zzz', password: 'xxx' })
-        .expect(200);
+        .send({ login: 'zzz', password: 'xxx' });
+
+      expect(resp.status).toEqual(200);
+
+      const user = await UserModel.findOne({ login: 'zzz' });
+      expect(resp.body.userId).toEqual(user!.id);
     });
 
     it('should return 401 when incorrect password', async () => {

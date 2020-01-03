@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 
 import { IAppError } from '../utils/errors/types';
 
@@ -13,7 +13,7 @@ interface IUser extends Document {
 }
 
 interface IUserModel extends mongoose.Model<IUser> {
-  doLogin: (login: string, password: string) => Promise<boolean>;
+  doLogin: (login: string, password: string) => Promise<Types.ObjectId>;
 }
 
 const UserSchema = new Schema({
@@ -49,7 +49,7 @@ UserSchema.statics.doLogin = async function(
   this: IUser,
   login: string,
   password: string
-): Promise<boolean> {
+): Promise<Types.ObjectId | null> {
   const user = await this.model('User').findOne({ login });
 
   if (!user) {
@@ -64,7 +64,7 @@ UserSchema.statics.doLogin = async function(
   if (user as IUser) {
     const isCorrectPassword = await (user! as IUser).comparePassword(password);
     if (isCorrectPassword) {
-      return true;
+      return user.id;
     } else {
       const passwordIncorrectError: IAppError = {
         code: 401,
@@ -74,7 +74,7 @@ UserSchema.statics.doLogin = async function(
       throw passwordIncorrectError;
     }
   }
-  return Promise.resolve(false);
+  return Promise.resolve(null);
 };
 
 const UserModel: IUserModel = mongoose.model<IUser, IUserModel>(
