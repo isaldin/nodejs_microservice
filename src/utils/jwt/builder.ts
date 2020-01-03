@@ -18,6 +18,10 @@ export interface IJWTGenerateInput {
 
 const isInvalidString = anyPass([isEmpty, complement(is(String))]);
 const isNotPositiveNumber = anyPass([complement(is(Number)), lt(__, 0)]);
+const isValidPayload = where({
+  userId: is(String),
+  exp: both(is(Number), gt(__, 0))
+});
 
 export default {
   generateJWT: (input: IJWTGenerateInput): string | null => {
@@ -48,14 +52,7 @@ export default {
     }
 
     try {
-      const payload = jwtSimple.decode(jwt, process.env.JWT_SECRET!);
-      return where(
-        {
-          userId: is(String),
-          exp: both(is(Number), gt(__, 0))
-        },
-        payload
-      );
+      return isValidPayload(jwtSimple.decode(jwt, process.env.JWT_SECRET!));
     } catch (err) {
       return false;
     }
