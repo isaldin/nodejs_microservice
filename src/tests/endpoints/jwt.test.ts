@@ -56,6 +56,8 @@ describe('/jwt', () => {
         .expect(404);
     });
 
+    test.todo('should return 500 when JWT_SECRET not setted in env');
+
     describe('when user exists in DB', () => {
       let userId: string;
       beforeAll(async () => {
