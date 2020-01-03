@@ -13,8 +13,8 @@ const usersRoute: PluginType = async (fastify, options) => {
           reason: 'not matched to confirm_password'
         });
       }
-      await new UserModel(req.body).save();
-      reply.code(201).send();
+      const user = await new UserModel(req.body).save();
+      reply.code(201).send({ userId: user.id });
     } catch (err) {
       const appError = convertError(err);
       reply.code(appError.code).send(appError);

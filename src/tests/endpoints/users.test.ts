@@ -36,14 +36,16 @@ describe('/users route', () => {
     });
 
     describe('when user non exists', () => {
-      it('should return 201 and create user in db', async () => {
+      it('should create user in db and return 201 with id for new user', async () => {
         const resp = await supertest(fastify.server)
           .post('/user')
           .send({ login: 'ilya', password: '1', confirm_password: '1' });
 
         expect(resp.status).toEqual(201);
+
         const user = await UserModel.findOne({ login: 'ilya' });
         expect(user!.login).toEqual('ilya');
+        expect(resp.body).toEqual(user!.id);
       });
 
       it("shouldn't return password in response", async () => {
