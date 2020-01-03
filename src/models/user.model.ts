@@ -5,7 +5,7 @@ import { IAppError } from '../utils/errors/types';
 
 const SALT_WORK_FACTOR = 10;
 
-interface IUser extends Document {
+export interface IUser extends Document {
   login: string;
   password: string;
   confirm_password: string;

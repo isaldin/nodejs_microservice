@@ -5,7 +5,7 @@ import jwt, { IJWTGenerateInput } from '../../../utils/jwt/builder';
 
 const userData: IJWTGenerateInput = {
   userId: '1q2w3e4r',
-  lifeTimeInSeconds: 60
+  lifeTimeInSeconds: jwt.defaultTokenLifetime
 };
 const testJWTSecret =
   'nd#QXUZkEJ_CTekzq6R?mj7MDqM+HKWMjDU-CRqZw4BL$5pPzyMM*uF9ufQx&&tt';
@@ -21,6 +21,11 @@ beforeAll(() => {
 });
 
 describe('jwt utils object', () => {
+  it('should has `defaultTokenLifetime` property with val 14*24*60*60 seconds', () => {
+    // @ts-ignore
+    expect(jwt.defaultTokenLifetime).toEqual(14 * 24 * 60 * 60);
+  });
+
   it('should has `generateJWT` method', () => {
     // @ts-ignore
     expect(jwt.generateJWT).toBeDefined();
@@ -81,7 +86,7 @@ describe('jwt utils object', () => {
     });
 
     it('should generate token', () => {
-      const exp = userData.lifeTimeInSeconds + Date.now() / 1000;
+      const exp = userData.lifeTimeInSeconds + Math.round(Date.now() / 1000);
       const token = jwt.generateJWT(userData);
       expect(token).toEqual(
         jwtSimple.encode(
@@ -112,7 +117,7 @@ describe('jwt utils object', () => {
         jwt.isValid(
           jwt.generateJWT({
             userId: 'xxx',
-            lifeTimeInSeconds: 60
+            lifeTimeInSeconds: jwt.defaultTokenLifetime
           })!
         )
       ).toEqual(true);

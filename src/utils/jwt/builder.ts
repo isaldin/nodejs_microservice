@@ -24,6 +24,9 @@ const isValidPayload = where({
 });
 
 export default {
+  // TODO: use this val when lifeTimeInSeconds not presented
+  defaultTokenLifetime: 14 * 24 * 60 * 60,
+
   generateJWT: (input: IJWTGenerateInput): string | null => {
     if (!process.env.JWT_SECRET) {
       throw new Error();
@@ -40,7 +43,7 @@ export default {
     return jwtSimple.encode(
       {
         userId: input.userId,
-        exp: Date.now() / 1000 + input.lifeTimeInSeconds
+        exp: Math.round(Date.now() / 1000) + input.lifeTimeInSeconds
       },
       process.env.JWT_SECRET
     );
