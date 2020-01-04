@@ -1,19 +1,14 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import { advanceTo, clear as resedDateToCurrent } from 'jest-date-mock';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { assoc } from 'ramda';
-// tslint:disable-next-line: no-implicit-dependencies
-import supertest from 'supertest';
 
-import buildServer from '../../index';
 import { JWTModel, UserModel } from '../../models';
-import { FastifyInstanceType } from '../../types';
 import jwt from '../../utils/jwt/builder';
+import TestServerHelper, { ServerType } from '../__helpers/server';
 
-let fastify: FastifyInstanceType;
-let mongoServer: MongoMemoryServer;
-let server: supertest.SuperTest<supertest.Test>;
+let testServer: TestServerHelper;
+let server: ServerType;
 
 const addJWTSecretToEnv = () => {
   process.env = assoc(
@@ -24,23 +19,12 @@ const addJWTSecretToEnv = () => {
 };
 
 beforeAll(async () => {
-  mongoServer = new MongoMemoryServer();
-  const mongoUri = await mongoServer.getUri();
-  await mongoose.connect(mongoUri, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-  fastify = await buildServer();
-  await fastify.ready();
-
-  server = supertest(fastify.server);
+  testServer = new TestServerHelper();
+  server = await testServer.init();
 });
 
 afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-  await fastify.close();
+  await testServer.stop();
 });
 
 describe('/jwt', () => {

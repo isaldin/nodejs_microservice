@@ -1,32 +1,16 @@
-// tslint:disable-next-line: no-implicit-dependencies
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-// tslint:disable-next-line: no-implicit-dependencies
-import supertest from 'supertest';
-
-import buildServer from '../../index';
 import { UserModel } from '../../models';
-import { FastifyInstanceType } from '../../types';
+import TestServerHelper, { ServerType } from '../__helpers/server';
 
-let fastify: FastifyInstanceType;
-let mongoServer: MongoMemoryServer;
+let testServer: TestServerHelper;
+let server: ServerType;
 
 beforeAll(async () => {
-  mongoServer = new MongoMemoryServer();
-  const mongoUri = await mongoServer.getUri();
-  await mongoose.connect(mongoUri, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-  fastify = await buildServer();
-  await fastify.ready();
+  testServer = new TestServerHelper();
+  server = await testServer.init();
 });
 
 afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-  await fastify.close();
+  await testServer.stop();
 });
 
 describe('/users route', () => {
@@ -37,7 +21,7 @@ describe('/users route', () => {
 
     describe('when user non exists', () => {
       it('should create user in db and return 201 with id for new user', async () => {
-        const resp = await supertest(fastify.server)
+        const resp = await server
           .post('/user')
           .send({ login: 'ilya', password: '1', confirm_password: '1' });
 
@@ -49,7 +33,7 @@ describe('/users route', () => {
       });
 
       it("shouldn't return password in response", async () => {
-        const resp = await supertest(fastify.server)
+        const resp = await server
           .post('/user')
           .send({ login: 'ilya', password: '1', confirm_password: '1' });
 
@@ -64,7 +48,7 @@ describe('/users route', () => {
         password: '1',
         confirm_password: '1'
       });
-      const resp = await supertest(fastify.server)
+      const resp = await server
         .post('/user')
         .send({ login: 'ilya', password: '1', confirm_password: '1' })
         .expect(422);
@@ -73,7 +57,7 @@ describe('/users route', () => {
 
     describe('should return 422 and validation error', () => {
       it('when empty login provided', async () => {
-        const resp = await supertest(fastify.server)
+        const resp = await server
           .post('/user')
           .send({ login: '', password: '1', confirm_password: '1' })
           .expect(422);
@@ -82,7 +66,7 @@ describe('/users route', () => {
       });
 
       it('when passwords are empty', async () => {
-        const resp = await supertest(fastify.server)
+        const resp = await server
           .post('/user')
           .send({ login: 'ilya', password: '', confirm_password: '' })
           .expect(422);
@@ -91,7 +75,7 @@ describe('/users route', () => {
       });
 
       it('when passwords are not matched', async () => {
-        const resp = await supertest(fastify.server)
+        const resp = await server
           .post('/user')
           .send({ login: 'ilya', password: '1', confirm_password: '2' })
           .expect(422);

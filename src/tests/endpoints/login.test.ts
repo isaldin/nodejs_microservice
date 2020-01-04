@@ -1,38 +1,22 @@
-// tslint:disable-next-line: no-implicit-dependencies
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-// tslint:disable-next-line: no-implicit-dependencies
-import supertest from 'supertest';
-
-import buildServer from '../../index';
 import { UserModel } from '../../models';
-import { FastifyInstanceType } from '../../types';
+import TestServerHelper, { ServerType } from '../__helpers/server';
 
-let fastify: FastifyInstanceType;
-let mongoServer: MongoMemoryServer;
+let testServer: TestServerHelper;
+let server: ServerType;
 
 beforeAll(async () => {
-  mongoServer = new MongoMemoryServer();
-  const mongoUri = await mongoServer.getUri();
-  await mongoose.connect(mongoUri, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-  fastify = await buildServer();
-  await fastify.ready();
+  testServer = new TestServerHelper();
+  server = await testServer.init();
 });
 
 afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-  await fastify.close();
+  await testServer.stop();
 });
 
 describe('/login', () => {
   beforeAll(async () => {
     await UserModel.deleteMany({});
-    await supertest(fastify.server)
+    await server
       .post('/user')
       .send({ login: 'zzz', password: 'xxx', confirm_password: 'xxx' })
       .expect(201);
@@ -40,7 +24,7 @@ describe('/login', () => {
 
   describe('when user exists', () => {
     it('should return 200 and userId when login success', async () => {
-      const resp = await supertest(fastify.server)
+      const resp = await server
         .post('/login')
         .send({ login: 'zzz', password: 'xxx' });
 
@@ -51,7 +35,7 @@ describe('/login', () => {
     });
 
     it('should return 401 when incorrect password', async () => {
-      await supertest(fastify.server)
+      await server
         .post('/login')
         .send({ login: 'zzz', password: 'zzz' })
         .expect(401);
@@ -60,7 +44,7 @@ describe('/login', () => {
 
   describe('when user non exists', () => {
     it('should return 404 and { message: "User not found" }', async () => {
-      const resp = await supertest(fastify.server)
+      const resp = await server
         .post('/login')
         .send({ login: 'ttt', password: 'zzz' })
         .expect(404);
