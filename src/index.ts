@@ -1,9 +1,9 @@
 import fastify from 'fastify';
 import mongoose from 'mongoose';
 
-import jwtRoute from './plugins/jwt';
-import loginRoute from './plugins/login';
-import usersRoute from './plugins/users';
+import jwtRoute from './routes/jwt';
+import loginRoute from './routes/login';
+import usersRoute from './routes/user';
 import { FastifyInstanceType } from './types';
 
 const buildServer = async (): Promise<FastifyInstanceType> => {
