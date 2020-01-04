@@ -1,30 +1,25 @@
 // tslint:disable-next-line: no-implicit-dependencies
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-// tslint:disable-next-line: no-implicit-dependencies
 import supertest from 'supertest';
 
 import buildServer from '../../index';
 import { FastifyInstanceType } from '../../types';
 
+import DBHelper from './db';
+
 export type ServerType = supertest.SuperTest<supertest.Test>;
 
 export default class TestServerHelper {
   private fastify: FastifyInstanceType | null;
-  private mongoServer: MongoMemoryServer;
+  private dbHelper: DBHelper;
 
   constructor() {
-    this.mongoServer = new MongoMemoryServer();
     this.fastify = null;
+    this.dbHelper = new DBHelper();
   }
 
   public async init(): Promise<ServerType> {
-    const mongoUri = await this.mongoServer.getUri();
-    await mongoose.connect(mongoUri, {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await this.dbHelper.init();
+
     this.fastify = await buildServer();
     await this.fastify.ready();
 
@@ -32,8 +27,7 @@ export default class TestServerHelper {
   }
 
   public async stop() {
-    await mongoose.disconnect();
-    await this.mongoServer.stop();
     await this.fastify!.close();
+    await this.dbHelper.stop();
   }
 }

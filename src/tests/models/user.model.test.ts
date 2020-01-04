@@ -1,24 +1,16 @@
-// tslint:disable-next-line: no-implicit-dependencies
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-
 import { UserModel } from '../../models';
 
-let mongoServer: MongoMemoryServer;
+import DBHelper from '../__helpers/db';
+
+const dbHelper = new DBHelper();
 
 beforeAll(async () => {
-  mongoServer = new MongoMemoryServer();
-  const mongoUri = await mongoServer.getUri();
-  await mongoose.connect(mongoUri, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  await dbHelper.init();
+  process.env.JWT_SECRET = 'asdf';
 });
 
 afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
+  await dbHelper.stop();
 });
 
 describe('UserModel', () => {
