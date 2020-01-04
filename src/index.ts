@@ -19,6 +19,10 @@ const buildServer = async (): Promise<FastifyInstanceType> => {
 };
 
 const start = async () => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error();
+  }
+
   const port = parseInt(process.env.PORT || '3333', 10);
   const server = await buildServer();
   try {

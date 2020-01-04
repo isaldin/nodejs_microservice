@@ -59,11 +59,12 @@ describe('/login', () => {
   });
 
   describe('when user non exists', () => {
-    it('should return 404', async () => {
-      await supertest(fastify.server)
+    it('should return 404 and { message: "User not found" }', async () => {
+      const resp = await supertest(fastify.server)
         .post('/login')
         .send({ login: 'ttt', password: 'zzz' })
         .expect(404);
+      expect(resp.body.message).toEqual('User not found in db');
     });
   });
 });
