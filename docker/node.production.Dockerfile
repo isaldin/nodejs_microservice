@@ -13,7 +13,7 @@ COPY package.json .
 ENV NODE_ENV=production
 RUN yarn install --production=false
 COPY . .
-RUN yarn build:prod \
+RUN yarn build \
   && rm -rf node_modules && yarn install --production
 
 #
