@@ -43,7 +43,7 @@ then run `docker run -d -p <PORT>:3333 --env MONGO_URL='<MONGO_CONNECTION_STRING
 
 If you need debug your test in VSCode just set breakpoint and run `Jest All` debug configuration.
 
-You can test endpoints and models separately for each test-file (i.e. you have dedicated instance of server and mongodb for each test-file) [example](https://github.com/isaldin/nodejs_microservice/blob/ee74e027e951785d93e088654dfee3141fa66b26/src/tests/endpoints/login.test.ts)
+You can test endpoints and models separately for each test-file (i.e. you have dedicated instance of server and mongodb for each test-file) [example](https://github.com/isaldin/nodejs_microservice/blob/506ee0601672687570a091e341e9d538d41d4075/src/tests/endpoints/login.route.test.ts)
 
 ---
 
