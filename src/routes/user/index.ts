@@ -42,6 +42,7 @@ const usersRoute: PluginType = async (fastify, options) => {
       const user = await new UserModel(req.body).save();
       reply.code(201).send({ userId: user.id });
     } catch (err) {
+      req.log.error({ err });
       const appError = convertError(err);
       reply.code(appError.code).send(appError);
     }

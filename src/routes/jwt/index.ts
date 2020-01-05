@@ -51,8 +51,7 @@ const jwtRoute: PluginType = async fastify => {
         jwt: jwtModel.token
       });
     } catch (error) {
-      // tslint:disable-next-line: no-console
-      console.error(error); // TODO: log it
+      req.log.error({ error });
       reply.code(500).send();
     }
   });

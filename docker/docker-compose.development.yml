@@ -6,6 +6,7 @@ services:
       file: common.yml
       service: node-app
     environment:
+      - NODE_ENV=development
       - MONGO_URL=mongodb://rootuser:supersecurepassword@mongodb-dev:27017/usersdb
       - JWT_SECRET=supersecuresecret
     command: bash -c "docker/wait_for_it.sh mongodb-dev:27017 -- yarn bcrypt && yarn start:dev"

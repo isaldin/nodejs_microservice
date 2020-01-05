@@ -1,9 +1,9 @@
 import { FastifyInstance, Plugin, RegisterOptions } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
-type HttpServer = Server;
-type HttpRequest = IncomingMessage;
-type HttpResponse = ServerResponse;
+export type HttpServer = Server;
+export type HttpRequest = IncomingMessage;
+export type HttpResponse = ServerResponse;
 
 type PluginOptionsType = RegisterOptions<HttpServer, HttpRequest, HttpResponse>;
 
@@ -15,7 +15,7 @@ export type PluginType<Options extends PluginOptionsType = {}> = Plugin<
 >;
 
 export type FastifyInstanceType = FastifyInstance<
-  Server,
-  IncomingMessage,
-  ServerResponse
+  HttpServer,
+  HttpRequest,
+  HttpResponse
 >;

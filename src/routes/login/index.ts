@@ -13,6 +13,7 @@ const loginRoute: PluginType = async fastify => {
         reply.code(200).send({ userId: result });
       }
     } catch (error) {
+      req.log.error({ error });
       const appError = convertError(error);
       reply.code(appError.code).send(appError);
     }
