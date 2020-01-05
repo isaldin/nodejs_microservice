@@ -25,7 +25,8 @@ const jwtRoute: PluginType = async fastify => {
       });
 
       if (existingJwtModel) {
-        if (!JWTModel.isTokenExpiredForUser(user.id)) {
+        const isExpired = await JWTModel.isTokenExpiredForUser(user.id);
+        if (!isExpired) {
           reply.code(200).send({
             jwt: existingJwtModel.token
           });

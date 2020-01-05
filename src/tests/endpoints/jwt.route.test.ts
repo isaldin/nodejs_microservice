@@ -1,5 +1,5 @@
 // tslint:disable-next-line: no-implicit-dependencies
-import { advanceTo, clear as resedDateToCurrent } from 'jest-date-mock';
+import { advanceTo, clear as resetDateToCurrent } from 'jest-date-mock';
 import mongoose from 'mongoose';
 import { assoc } from 'ramda';
 
@@ -106,12 +106,20 @@ describe('/jwt', () => {
       });
 
       it('should return existing jwt instead of create new', async () => {
+        // jump for minute to the future in order to userJWT and resp.body.jwt
+        // will be different (both requests made in one moment).
+        //
+        // that's why we need to delay some minimal time before testing
+        advanceTo(Date.now() + 60 * 1000);
+
         const resp = await server.post('/jwt/generateToken').send({ userId });
         const jwtsForUserCount = await JWTModel.find({
           user: userId
         }).countDocuments();
         expect(jwtsForUserCount).toEqual(1);
         expect(resp.body.jwt).toEqual(userJWT);
+
+        resetDateToCurrent();
       });
 
       describe('if stored token expired', () => {
@@ -132,16 +140,11 @@ describe('/jwt', () => {
           expUserId = user.id;
           expiredJWT = resp.body.jwt;
           expect(expiredJWT).toBeDefined();
-
-          // go to future for 15 days
-          advanceTo(Date.now() + 15 * 24 * 60 * 60 * 1000);
-        });
-
-        afterAll(() => {
-          resedDateToCurrent();
         });
 
         it('should remove them, generate new and return new generated', async () => {
+          // go to the future for 15 days
+          advanceTo(Date.now() + 15 * 24 * 60 * 60 * 1000);
           const tokenForNow = jwt.generateJWT({
             userId: expUserId,
             lifeTimeInSeconds: jwt.defaultTokenLifetime
@@ -153,8 +156,10 @@ describe('/jwt', () => {
           const freshJWT = resp.body.jwt;
           expect(freshJWT).toBeDefined();
 
+          expect(tokenForNow).not.toEqual(expiredJWT);
           expect(freshJWT).not.toEqual(expiredJWT);
           expect(freshJWT).toEqual(tokenForNow);
+          resetDateToCurrent();
         });
       });
     });
