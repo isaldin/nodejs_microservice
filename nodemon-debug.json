@@ -2,5 +2,5 @@
   "watch": ["src"],
   "ext": "ts",
   "ignore": ["src/**/*.test.ts"],
-  "exec": "yarn tsc -p ./src && node --inspect=0.0.0.0 ./dist/index.js"
+  "exec": "yarn tsc -p . --sourceMap --outDir ./build && yarn postbuild && node --inspect=0.0.0.0 ./build/index.js"
 }

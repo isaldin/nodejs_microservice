@@ -10,8 +10,7 @@
     "docker:dev:rebuild": "docker-compose -f docker/docker-compose.development.yml build",
     "docker:debug": "docker-compose -f docker/docker-compose.development.yml -f docker/docker-compose.debug.yml up",
     "docker:prod": "docker-compose -f ./docker/docker-compose.prod.local.yml build --no-cache && docker-compose -f ./docker/docker-compose.prod.local.yml up",
-    "build:prod": "rm -rf ./build && yarn tsc",
-    "start:prod": "yarn build:prod && NODE_ENV=production node ./build/index.js",
+    "build": "(rm -rf ./build || true) && yarn tsc && yarn ef-tspm",
     "test": "jest --watchAll --verbose",
     "test:debug": "node --inspect node_modules/.bin/jest --watchAll --runInBand",
     "bcrypt": "npm rebuild bcrypt@3.0.7 --update-binary"
@@ -24,6 +23,7 @@
     "ramda": "0.26.1"
   },
   "devDependencies": {
+    "@ef-carbon/tspm": "2.2.5",
     "@types/bcrypt": "3.0.0",
     "@types/jest": "24.0.25",
     "@types/jwt-simple": "0.5.33",
@@ -39,6 +39,7 @@
     "supertest": "4.0.2",
     "ts-jest": "24.2.0",
     "ts-node": "8.5.4",
+    "tsconfig-paths": "3.9.0",
     "tslint": "5.20.1",
     "tslint-config-prettier": "1.18.0",
     "typescript": "3.7.4"
@@ -58,12 +59,13 @@
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
-    "roots": [
-      "./src"
-    ],
     "setupFiles": [
       "jest-date-mock"
-    ]
+    ],
+    "rootDir": ".",
+    "moduleNameMapper": {
+      "^@app/(.*)$": "<rootDir>/src/$1"
+    }
   },
   "prettier": {
     "singleQuote": true

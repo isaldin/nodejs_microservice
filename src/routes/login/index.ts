@@ -1,7 +1,7 @@
-import { UserModel } from '../../models';
-import { PluginType } from '../../types';
+import { UserModel } from '@app/models';
+import { PluginType } from '@app/types';
 
-import convertError from '../../utils/errors/converter';
+import convertError from '@app/utils/errors/converter';
 
 const loginRoute: PluginType = async fastify => {
   fastify.post('/', async (req, reply) => {

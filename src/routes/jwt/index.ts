@@ -1,9 +1,9 @@
 import { Types } from 'mongoose';
 
-import { JWTModel, UserModel } from '../../models';
-import { PluginType } from '../../types';
+import { JWTModel, UserModel } from '@app/models';
+import { PluginType } from '@app/types';
 
-import jwt from '../../utils/jwt/builder';
+import jwt from '@app/utils/jwt/builder';
 
 const jwtRoute: PluginType = async fastify => {
   fastify.post('/generateToken', async (req, reply) => {

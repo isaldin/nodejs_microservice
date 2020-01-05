@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "outDir": "../dist",
-    "sourceMap": true,
-    "esModuleInterop": true
-  },
-  "exclude": ["tests"]
-}

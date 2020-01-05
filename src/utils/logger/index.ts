@@ -1,4 +1,4 @@
-import { HttpResponse } from '../../types';
+import { HttpResponse } from '@app/types';
 
 export default () => {
   let loggerLevel: string;
@@ -27,8 +27,7 @@ export default () => {
       loggerLevel === 'debug'
         ? {
             levelFirst: true,
-            colorize: true,
-            translateTime: true
+            colorize: true
           }
         : false,
     prettifier:

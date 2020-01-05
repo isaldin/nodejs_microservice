@@ -23,8 +23,8 @@
       "name": "Attach to Remote",
       "address": "localhost",
       "port": 9119,
-      "localRoot": "${workspaceFolder}/dist",
-      "remoteRoot": "/usr/src/app/dist",
+      "localRoot": "${workspaceFolder}/build",
+      "remoteRoot": "/usr/src/app/build",
       "skipFiles": ["<node_internals>/**"]
     },
     {
@@ -38,7 +38,7 @@
       "internalConsoleOptions": "openOnSessionStart",
       "env": {
         "TS_NODE_IGNORE": "false",
-        "NODE_ENV": "DEBUG"
+        "NODE_ENV": "development"
       }
     }
   ]

@@ -4,3 +4,4 @@ yarn-error.log
 build/
 dist/
 mongo-volume/
+**/*.DS_Store

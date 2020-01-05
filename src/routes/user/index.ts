@@ -1,8 +1,7 @@
-import { UserModel } from '../../models';
-import { PluginType } from '../../types';
-
-import convertError from '../../utils/errors/converter';
-import { buildValidationError } from '../../utils/errors/factory';
+import { UserModel } from '@app/models';
+import { PluginType } from '@app/types';
+import convertError from '@app/utils/errors/converter';
+import { buildValidationError } from '@app/utils/errors/factory';
 
 /*
 gateway                                    this ms

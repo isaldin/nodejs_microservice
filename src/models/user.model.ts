@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
-import { IAppError } from '../utils/errors/types';
+import { IAppError } from '@app/utils/errors/types';
 
 const SALT_WORK_FACTOR = 10;
 

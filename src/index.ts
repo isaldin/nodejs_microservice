@@ -1,11 +1,11 @@
 import fastify from 'fastify';
 import mongoose from 'mongoose';
 
-import jwtRoute from './routes/jwt';
-import loginRoute from './routes/login';
-import usersRoute from './routes/user';
-import { FastifyInstanceType } from './types';
-import logger from './utils/logger';
+import jwtRoute from '@app/routes/jwt';
+import loginRoute from '@app/routes/login';
+import usersRoute from '@app/routes/user';
+import { FastifyInstanceType } from '@app/types';
+import logger from '@app/utils/logger';
 
 const buildServer = async (): Promise<FastifyInstanceType> => {
   const server: FastifyInstanceType = fastify({
@@ -37,7 +37,6 @@ const start = async () => {
 
   const port = parseInt(process.env.PORT || '3333', 10);
   const server = await buildServer();
-  server.log.error('test');
   try {
     await server.listen(port, '0.0.0.0');
 
