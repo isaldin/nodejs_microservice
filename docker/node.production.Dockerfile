@@ -13,11 +13,13 @@ COPY package.json .
 ENV NODE_ENV=production
 RUN yarn install --production=false
 COPY . .
-RUN yarn build:prod
-RUN rm -rf node_modules && yarn install --production
+RUN yarn build:prod \
+  && rm -rf node_modules && yarn install --production
 
 #
-FROM mhart/alpine-node:slim-12.14.0
+FROM node:12.14.0-buster-slim as prod-build
+
+USER node
 
 WORKDIR /home/app
 

@@ -1,0 +1,29 @@
+version: '2.4'
+
+services:
+  node-app-prod:
+    depends_on:
+      - mongo-prod
+    build:
+      dockerfile: ./docker/node.production.Dockerfile
+      context: ../
+      target: prod-build
+    environment:
+      - MONGO_URL=mongodb://rootuser:supersecurepassword@mongodb-prod:27017/usersdb
+      - JWT_SECRET=supersecuresecret
+    command: node index.js
+    ports:
+      - ${PORT:-3773}:3333
+    networks:
+      - prod
+
+  mongo-prod:
+    extends:
+      file: common.yml
+      service: mongo
+    container_name: mongodb-prod
+    networks:
+      - prod
+
+networks:
+  prod: {}

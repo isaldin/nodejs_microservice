@@ -9,6 +9,7 @@
     "docker:dev": "docker-compose -f docker/docker-compose.development.yml up",
     "docker:dev:rebuild": "docker-compose -f docker/docker-compose.development.yml build",
     "docker:debug": "docker-compose -f docker/docker-compose.development.yml -f docker/docker-compose.debug.yml up",
+    "docker:prod": "docker-compose -f ./docker/docker-compose.prod.local.yml build --no-cache && docker-compose -f ./docker/docker-compose.prod.local.yml up",
     "build:prod": "rm -rf ./build && yarn tsc",
     "start:prod": "yarn build:prod && NODE_ENV=production node ./build/index.js",
     "test": "jest --watchAll --verbose",
